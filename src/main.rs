@@ -1,6 +1,6 @@
 use clap::Parser;
-use futures::stream::StreamExt;
 use futures::executor::block_on;
+use futures::stream::StreamExt;
 use libp2p::{
     core::multiaddr::Protocol,
     core::muxing::StreamMuxerBox,
@@ -15,9 +15,12 @@ use libp2p::{
 use std::error::Error;
 use std::net::{Ipv4Addr, Ipv6Addr};
 
+mod daemonizer;
+
 fn main() -> Result<(), Box<dyn Error>> {
     env_logger::init();
 
+    daemonizer::start();
     let opt = Opt::parse();
     println!("opt: {opt:?}");
 
