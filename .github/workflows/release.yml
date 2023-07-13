@@ -9,9 +9,9 @@ on:
     ## - release
 
 env:
-  BIN_NAME: share
-  PROJECT_NAME: wokeshare
-  REPO_NAME: wokebuild/share
+  BIN_NAME: relay-server
+  PROJECT_NAME: relayserver
+  REPO_NAME: wokebuild/share-relay-server
 
 jobs:
   dist:
