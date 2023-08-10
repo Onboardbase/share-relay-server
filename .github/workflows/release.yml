@@ -9,7 +9,7 @@ on:
     ## - release
 
 env:
-  BIN_NAME: share-relay-server
+  BIN_NAME: scs-relay-server
   PROJECT_NAME: relayserver
   REPO_NAME: onboardbase/share-relay-server
 
