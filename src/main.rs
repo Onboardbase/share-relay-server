@@ -8,9 +8,9 @@ use libp2p::{
     core::{Multiaddr, Transport},
     identify, identity,
     identity::PeerId,
-    noise, ping, relay,
+    ping, relay,
     swarm::{NetworkBehaviour, SwarmBuilder, SwarmEvent},
-    tcp,
+    tcp, tls,
 };
 use std::error::Error;
 use std::net::{Ipv4Addr, Ipv6Addr};
@@ -34,7 +34,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let tcp_transport = tcp_transport
         .upgrade(upgrade::Version::V1Lazy)
         .authenticate(
-            noise::Config::new(&local_key).expect("Signing libp2p-noise static DH keypair failed."),
+            tls::Config::new(&local_key).expect("Signing libp2p-noise static DH keypair failed."),
         )
         .multiplex(libp2p::yamux::Config::default());
 
