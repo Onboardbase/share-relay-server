@@ -2160,6 +2160,19 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d29ab0c6d3fc0ee92fe66e2d99f700eab17a8d57d1c1d3b748380fb20baa78cd"
 
 [[package]]
+name = "scs-relay-server"
+version = "0.0.6"
+dependencies = [
+ "async-std",
+ "async-trait",
+ "clap",
+ "daemonize",
+ "env_logger",
+ "futures",
+ "libp2p",
+]
+
+[[package]]
 name = "sct"
 version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2197,19 +2210,6 @@ dependencies = [
  "cfg-if",
  "cpufeatures",
  "digest 0.10.7",
-]
-
-[[package]]
-name = "share-relay-server"
-version = "0.0.5"
-dependencies = [
- "async-std",
- "async-trait",
- "clap",
- "daemonize",
- "env_logger",
- "futures",
- "libp2p",
 ]
 
 [[package]]
