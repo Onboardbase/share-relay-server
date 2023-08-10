@@ -5,11 +5,11 @@ use std::fs::File;
 use daemonize::Daemonize;
 
 pub fn start() {
-    let stdout = File::create("/tmp/wokeshare.out").unwrap();
-    let stderr = File::create("/tmp/wokeshare.err").unwrap();
+    let stdout = File::create("/tmp/secureshare.out").unwrap();
+    let stderr = File::create("/tmp/secureshare.err").unwrap();
 
     let daemonize = Daemonize::new()
-        .pid_file("/tmp/wokeshare.pid") // Every method except `new` and `start`
+        .pid_file("/tmp/secureshare.pid") // Every method except `new` and `start`
         .chown_pid_file(true) // is optional, see `Daemonize` documentation
         .working_directory("/tmp") // for default behaviour.
         .user("nobody")
