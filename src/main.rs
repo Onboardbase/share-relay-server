@@ -1,6 +1,6 @@
 use clap::Parser;
-use futures::executor::block_on;
 use futures::stream::StreamExt;
+use futures::{executor::block_on, future::Either};
 use libp2p::{
     core::multiaddr::Protocol,
     core::muxing::StreamMuxerBox,
@@ -38,8 +38,14 @@ fn main() -> Result<(), Box<dyn Error>> {
         )
         .multiplex(libp2p::yamux::Config::default());
 
-    let transport = tcp_transport
-        .map(|either_output, _| (either_output.0, StreamMuxerBox::new(either_output.1)))
+    let quic_transport = quic::async_std::Transport::new(quic::Config::new(&local_key));
+
+    let transport = quic_transport
+        .or_transport(tcp_transport)
+        .map(|either_output, _| match either_output {
+            Either::Left((peer_id, muxer)) => (peer_id, StreamMuxerBox::new(muxer)),
+            Either::Right((peer_id, muxer)) => (peer_id, StreamMuxerBox::new(muxer)),
+        })
         .boxed();
 
     let behaviour = Behaviour {
@@ -62,14 +68,14 @@ fn main() -> Result<(), Box<dyn Error>> {
         .with(Protocol::Tcp(opt.port));
     swarm.listen_on(listen_addr_tcp)?;
 
-    // let listen_addr_quic = Multiaddr::empty()
-    //     .with(match opt.use_ipv6 {
-    //         Some(true) => Protocol::from(Ipv6Addr::UNSPECIFIED),
-    //         _ => Protocol::from(Ipv4Addr::UNSPECIFIED),
-    //     })
-    //     .with(Protocol::Udp(opt.port))
-    //     .with(Protocol::QuicV1);
-    // swarm.listen_on(listen_addr_quic)?;
+    let listen_addr_quic = Multiaddr::empty()
+        .with(match opt.use_ipv6 {
+            Some(true) => Protocol::from(Ipv6Addr::UNSPECIFIED),
+            _ => Protocol::from(Ipv4Addr::UNSPECIFIED),
+        })
+        .with(Protocol::Udp(opt.port))
+        .with(Protocol::QuicV1);
+    swarm.listen_on(listen_addr_quic)?;
 
     block_on(async {
         loop {
